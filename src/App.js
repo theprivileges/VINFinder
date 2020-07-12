@@ -122,16 +122,14 @@ function App() {
         )}
         {showResults && (
           <div>
-            <ul>
+            <ul className="App-results">
             {autos.map(({make, model, year, vin}) => (
-              <li key={vin}>
+              <li className="App-vehicle" key={vin}>
                 Make: {make} Model: {model} ({year}) VIN: <strong>{vin}</strong>
               </li>
             ))}
             </ul>
-            <div>
-              <button onClick={resetUI}>Reset</button>
-            </div>
+            <button onClick={resetUI}>Reset</button>
           </div>
         )}
         {error && (

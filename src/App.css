@@ -12,4 +12,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
+  margin-top: 1rem;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+.App-results {
+  list-style-type: none;
+}
+
+.App-vehicle {
+  display: inline-block;
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.App-vehicle::before {
+  content: '🚘';
+  display: inline-block;
+  margin-right: 0.2rem;
 }
