@@ -13,6 +13,7 @@ function App() {
   const [isReady, setIsReady] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [autos, setAutos] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
 
   /**
    * Quick way to reset everything so the end-user can look up other vehicles from a different insurer
@@ -21,6 +22,7 @@ function App() {
     setIsReady(false)
     setIsAuthenticated(false)
     setError(null)
+    setAutos([])
   }
 
   /**
@@ -37,6 +39,7 @@ function App() {
    * @see https://trellisconnect.com/docs?#trellis-connect-api-accounts
    */
   const fetchPolicies = async () => {
+    setIsFetching(true)
     try {
       const headers = {
         'Accept':'application/json',
@@ -62,6 +65,7 @@ function App() {
     } catch (error) {
       setError(error.message)
     }
+    setIsFetching(false)
   }
 
   /**
@@ -98,6 +102,7 @@ function App() {
   const openWidget = () => client.current.open()
   const showRefreshButton = isAuthenticated && !isReady
   const showResults = isAuthenticated && isReady
+  const shouldDisableRefresh = isFetching && !isReady
 
   return (
     <div className="App">
@@ -112,7 +117,7 @@ function App() {
           <div>
             <p>We are still waiting a response from your insurance provider.</p>
             <p>Click on the <kbd>Refresh</kbd> button to check on the status of your request.</p>
-            <button onClick={fetchPolicies}>Refresh</button>
+            <button onClick={fetchPolicies} disabled={shouldDisableRefresh}>Refresh</button>
           </div>
         )}
         {showResults && (
