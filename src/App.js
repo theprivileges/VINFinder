@@ -125,7 +125,7 @@ function App() {
             <ul>
             {autos.map(({make, model, year, vin}) => (
               <li key={vin}>
-                Make:{make} Model:{model} ({year}) VIN: <strong>{vin}</strong>
+                Make: {make} Model: {model} ({year}) VIN: <strong>{vin}</strong>
               </li>
             ))}
             </ul>
