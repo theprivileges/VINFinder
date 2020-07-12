@@ -14,16 +14,28 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [autos, setAutos] = useState([])
 
+  /**
+   * Quick way to reset everything so the end-user can look up other vehicles from a different insurer
+   */
   const resetUI = () => {
     setIsReady(false)
     setIsAuthenticated(false)
     setError(null)
   }
 
+  /**
+   * Iterates over all available vehicles for a given policy, so we can display them to the end-user.
+   * @param {Object} policy - Policy belonging to the end user
+   * @param {Array} policy.vehicles - List of vehicles associated with the given policy
+   */
   const getPolicyVehicles = ({vehicles}) => {
     vehicles.forEach(({make, model, year, vin}) => setAutos((prev) => [...prev, {make, model, year, vin }]))
   }
 
+  /**
+   * Calls the Accounts end-point in order to get policies associated with the authorized user.
+   * @see https://trellisconnect.com/docs?#trellis-connect-api-accounts
+   */
   const fetchPolicies = async () => {
     try {
       const headers = {
@@ -35,7 +47,6 @@ function App() {
       {
         method: 'GET',
         headers,
-        credentials: 'same-origin'
       })
       if (!response.ok) {
         throw new Error(response.error)
@@ -53,6 +64,10 @@ function App() {
     }
   }
 
+  /**
+   * This effect will configure the Trellis SDK when the component mounts, and will destroy it when the component unmounts.
+   * Use a ref to keep track of the Trellis SDK Client because we do not want to cause any re-renders when the client gets updated. 
+   */
   useEffect(() => {
     // Configure Trellis SDK
     client.current = TrellisConnect.configure({
@@ -77,6 +92,9 @@ function App() {
     }
   }, [])
 
+  /**
+   * Opens the Trellis Widget
+   */
   const openWidget = () => client.current.open()
   const showRefreshButton = isAuthenticated && !isReady
   const showResults = isAuthenticated && isReady
@@ -91,22 +109,31 @@ function App() {
       <div className="App-controls">
         {!isAuthenticated && (<button onClick={openWidget}>Lookup your VIN</button>)}
         {showRefreshButton && (
-          <button onClick={fetchPolicies}>Refresh</button>
+          <div>
+            <p>We are still waiting a response from your insurance provider.</p>
+            <p>Click on the <kbd>Refresh</kbd> button to check on the status of your request.</p>
+            <button onClick={fetchPolicies}>Refresh</button>
+          </div>
         )}
         {showResults && (
-          <>
+          <div>
             <ul>
             {autos.map(({make, model, year, vin}) => (
               <li key={vin}>
-                Make:{make} Model:{model} ({year}) VIN: {vin}
+                Make:{make} Model:{model} ({year}) VIN: <strong>{vin}</strong>
               </li>
             ))}
             </ul>
-            <button onClick={resetUI}>Reset</button>
-          </>
+            <div>
+              <button onClick={resetUI}>Reset</button>
+            </div>
+          </div>
         )}
         {error && (
-          <pre>{error}</pre>
+          <div>
+            <pre>{error}</pre>
+            <button onClick={resetUI}>Try Again</button>
+          </div>
         )}
       </div>
     </div>
