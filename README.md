@@ -2,6 +2,15 @@
 
 Demo application that allows a end-user to lookup their vehicle VIN using Trellis SDK. 
 
+## Get Started
+
+You are going to need [`yarn`](https://classic.yarnpkg.com/en/) to be installed onto your workstation.
+
+- Open a terminal.
+- Navigate to where you have unzipped the app.
+- Run `yarn install` to install all of the app's dependencies.
+- Run `yarn start` to run the app in development mode.
+
 ## Available Scripts
 
 In the project directory, you can run:
